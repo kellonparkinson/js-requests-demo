@@ -28,7 +28,6 @@ const getAllChars = () => {
     console.log(err)
   })
 }
-getAllBtn.addEventListener('click', getAllChars)
 
 const getOneChar = event => {
   clearCharacters()
@@ -44,8 +43,21 @@ const getOneChar = event => {
   })
 }
 
-for (let i = 0; i < charBtns.length; i++) {
-  charBtns[i].addEventListener('click', getOneChar)
+const getOldChars = event => {
+  event.preventDefault()
+  clearCharacters()
+  const age = ageInput.value
+
+  axios
+  .get(`${baseURL}/character/?age=${age}`)
+  .then((res) => {
+    for (let i = 0; i < res.data.length; i++) {
+      createCharacterCard(res.data[i])
+    }
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 }
 
 function createCharacterCard(char) {
@@ -65,3 +77,12 @@ function createCharacterCard(char) {
 function clearCharacters() {
   charContainer.innerHTML = ``
 }
+
+// event listeners
+getAllBtn.addEventListener('click', getAllChars)
+
+for (let i = 0; i < charBtns.length; i++) {
+  charBtns[i].addEventListener('click', getOneChar)
+}
+
+ageForm.addEventListener('submit', getOldChars)
