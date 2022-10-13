@@ -60,6 +60,32 @@ const getOldChars = event => {
   })
 }
 
+const creatNewChar = event => {
+  event.preventDefault()
+  clearCharacters()
+
+  let newLikes = newLikesText.value.split(',')
+
+  let body = {
+    firstName: newFirstInput.value,
+    lastName: newLastInput.value,
+    gender: newGenderDropDown.value,
+    age: newAgeInput.value,
+    likes: newLikes
+  }
+
+  axios
+  .post(`${baseURL}/character`, body)
+  .then((res) => {
+    for (let i = 0; i < res.data.length; i++) {
+      createCharacterCard(res.data[i])
+    }
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
+
 function createCharacterCard(char) {
   let charCard = document.createElement('div')
   charCard.innerHTML = `<h3>${char.firstName} ${char.lastName}</h3>
@@ -78,7 +104,7 @@ function clearCharacters() {
   charContainer.innerHTML = ``
 }
 
-// event listeners
+// ------ event listeners ----------
 getAllBtn.addEventListener('click', getAllChars)
 
 for (let i = 0; i < charBtns.length; i++) {
@@ -86,3 +112,6 @@ for (let i = 0; i < charBtns.length; i++) {
 }
 
 ageForm.addEventListener('submit', getOldChars)
+
+createForm.addEventListener('submit', creatNewChar)
+//-----------------------------------
